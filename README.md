@@ -55,7 +55,7 @@ yarn dev
 
 ## Screenshots
 
-![Homepage](screenshots/screenshot.png)
+![Homepage](https://raw.githubusercontent.com/akash-khan-311/flights-search/refs/heads/main/public/screenshots/screenshot.png)
 
 ## Live Demo
 
