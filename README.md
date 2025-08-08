@@ -55,7 +55,7 @@ yarn dev
 
 ## Screenshots
 
-![Homepage](./screenshots/screenshot.png)
+![Homepage](screenshots/screenshot.png)
 
 ## Live Demo
 
