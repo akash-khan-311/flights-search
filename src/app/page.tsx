@@ -1,6 +1,6 @@
 'use client';
 
-import FlightTicket from "@/components/UI/test";
+import FlightPage from "@/components/UI/Flights";
 interface FlightTicketProps {
   tripType: string;
   flightClass: string;
@@ -14,9 +14,10 @@ interface FlightTicketProps {
 
 export default function Home() {
   return (
-    <div className="flex justify-center flex-col items-center ">
-      <FlightTicket />
-      {/* <FlightsSearchForm /> */}
+    <div className="">
+
+
+      <FlightPage />
     </div>
   );
 }
