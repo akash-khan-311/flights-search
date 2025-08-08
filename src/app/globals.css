@@ -3,11 +3,13 @@
 @tailwind utilities;
 
 body {
-  background-image: url('https://raw.githubusercontent.com/Learn-with-Sumit/think-in-a-redux-way/refs/heads/2.12/html/img/Hero-Banner.webp');
+  background: url('https://raw.githubusercontent.com/Learn-with-Sumit/think-in-a-redux-way/refs/heads/2.12/html/img/Hero-Banner.webp'),
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+  background-blend-mode: overlay;
   background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
-  background-position: 50% 40%;
   background-attachment: fixed;
-  font-family: 'Inter', sans-serif;
   height: 100vh;
+  overflow-x: hidden;
 }

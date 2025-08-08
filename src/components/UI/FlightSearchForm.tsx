@@ -1,23 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import { getAirportSuggestions } from "@/lib";
 import { CalendarDaysIcon, MapPinIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-
-
 export type FormValues = {
   from: string;
   to: string;
   date: string;
   passengers: number;
 };
-
 type Props = {
   onSearch: (data: FormValues) => void;
 };
-
 export default function FlightSearchForm({ onSearch }: Props) {
   const { control, handleSubmit, watch, setValue } = useForm<FormValues>({
     defaultValues: {
@@ -27,26 +22,26 @@ export default function FlightSearchForm({ onSearch }: Props) {
       passengers: 1,
     },
   });
-
   const [fromSuggestions, setFromSuggestions] = useState<any[]>([]);
   const [toSuggestions, setToSuggestions] = useState<any[]>([]);
-
-
+  const [fromSelected, setFromSelected] = useState(false);
+  const [toSelected, setToSelected] = useState(false);
   const fromValue = watch("from");
   const toValue = watch("to");
 
   useEffect(() => {
-    if (fromValue.length > 1) {
-      getAirportSuggestions(fromValue).then(setFromSuggestions);
+    if (!fromSelected && fromValue.length > 1) {
+      getAirportSuggestions(fromValue).then((res) => {
+        setFromSuggestions(res);
+      });
     } else {
       setFromSuggestions([]);
     }
-  }, [fromValue]);
+  }, [fromValue, fromSelected]);
 
   useEffect(() => {
-    if (toValue.length > 1) {
+    if (!toSelected && toValue.length > 1) {
       getAirportSuggestions(toValue).then((res) => {
-        // Avoid same city in 'to' as 'from'
         const filtered = res.filter(
           (item) =>
             item.address?.cityName?.toLowerCase() !==
@@ -57,10 +52,7 @@ export default function FlightSearchForm({ onSearch }: Props) {
     } else {
       setToSuggestions([]);
     }
-  }, [toValue, fromValue]);
-
-
-
+  }, [toValue, fromValue, toSelected]);
   return (
     <section className="container mx-auto py-8">
       <div className="backdrop-blur-xl bg-white/20 rounded-lg shadow-lg p-6">
@@ -77,7 +69,7 @@ export default function FlightSearchForm({ onSearch }: Props) {
                 rules={{ required: "From city is required" }}
                 render={({ field, fieldState }) => (
                   <div className="relative">
-                    <label className="flex items-center mb-1 font-semibold text-gray-700" htmlFor="from">
+                    <label className="flex items-center mb-1 font-semibold text-white" htmlFor="from">
                       <MapPinIcon className="w-5 h-5 mr-2 text-blue-600" /> From
                     </label>
                     <input
@@ -88,18 +80,24 @@ export default function FlightSearchForm({ onSearch }: Props) {
                       className={`w-full border rounded-lg text-white px-4 py-3 backdrop-blur-3xl bg-black/40 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 ${fieldState.error ? "border-red-500" : "border-gray-300"
                         }`}
                       autoComplete="off"
+                      onChange={(e) => {
+                        setFromSelected(false);
+                        field.onChange(e);
+                      }}
                     />
                     {fromSuggestions.length > 0 && (
                       <ul className="absolute z-30 bg-white border border-gray-300 rounded-lg w-full max-h-52 overflow-auto mt-1 shadow-lg">
                         {fromSuggestions.map((item) => (
                           <li
                             key={item.id}
-                            className="cursor-pointer px-4 py-2 hover:bg-blue-100"
+                            className="cursor-pointer px-4 py-2 hover:bg-blue-100 text-[13px] capitalize"
                             onClick={() => {
                               setValue("from", `${item.name} (${item.iataCode})`);
                               setFromSuggestions([]);
+                              setFromSelected(true);
                             }}
                           >
+                            <MapPinIcon className="w-5 h-5 text-blue-500" />
                             <span className="font-semibold">{item.name} ({item.iataCode})</span> — {item.address?.cityName}, {item.address?.countryName}
                           </li>
                         ))}
@@ -112,9 +110,6 @@ export default function FlightSearchForm({ onSearch }: Props) {
                 )}
               />
             </div>
-
-
-
             {/* To */}
             <div>
               <Controller
@@ -123,7 +118,7 @@ export default function FlightSearchForm({ onSearch }: Props) {
                 rules={{ required: "Destination is required" }}
                 render={({ field, fieldState }) => (
                   <div className="relative">
-                    <label className="flex items-center mb-1 font-semibold text-gray-700" htmlFor="to">
+                    <label className="flex items-center mb-1 font-semibold text-white" htmlFor="to">
                       <MapPinIcon className="w-5 h-5 mr-2 text-green-600" /> To
                     </label>
                     <input
@@ -134,18 +129,24 @@ export default function FlightSearchForm({ onSearch }: Props) {
                       className={`w-full text-white border rounded-lg px-4 py-3 backdrop-blur-3xl bg-black/40 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 ${fieldState.error ? "border-red-500" : "border-gray-300"
                         }`}
                       autoComplete="off"
+                      onChange={(e) => {
+                        setToSelected(false);
+                        field.onChange(e);
+                      }}
                     />
                     {toSuggestions.length > 0 && (
                       <ul className="absolute z-30 bg-white border border-gray-300 rounded-lg w-full max-h-52 overflow-auto mt-1 shadow-lg">
                         {toSuggestions.map((item) => (
                           <li
                             key={item.id}
-                            className="cursor-pointer px-4 py-2 hover:bg-green-100"
+                            className="cursor-pointer px-4 py-2 hover:bg-green-100 text-[13px] capitalize"
                             onClick={() => {
                               setValue("to", `${item.name} (${item.iataCode})`);
                               setToSuggestions([]);
+                              setToSelected(true);
                             }}
                           >
+                            <MapPinIcon className="w-5 h-5 text-green-500" />
                             <span className="font-semibold">{item.name} ({item.iataCode})</span> — {item.address?.cityName}, {item.address?.countryName}
                           </li>
                         ))}
@@ -158,8 +159,6 @@ export default function FlightSearchForm({ onSearch }: Props) {
                 )}
               />
             </div>
-
-
             {/* Date */}
             <div>
               <Controller
@@ -168,7 +167,7 @@ export default function FlightSearchForm({ onSearch }: Props) {
                 rules={{ required: "Travel date is required" }}
                 render={({ field, fieldState }) => (
                   <div>
-                    <label className="flex items-center mb-1 font-semibold text-gray-700" htmlFor="date">
+                    <label className="flex items-center mb-1 font-semibold text-white" htmlFor="date">
                       <CalendarDaysIcon className="w-5 h-5 mr-2 text-purple-600" /> Journey Date
                     </label>
                     <input
@@ -185,8 +184,6 @@ export default function FlightSearchForm({ onSearch }: Props) {
                 )}
               />
             </div>
-
-
             {/* Passengers */}
             <div>
               <Controller
@@ -199,7 +196,7 @@ export default function FlightSearchForm({ onSearch }: Props) {
                 }}
                 render={({ field, fieldState }) => (
                   <div>
-                    <label className="flex items-center mb-1 font-semibold text-gray-700" htmlFor="passengers">
+                    <label className="flex items-center mb-1 font-semibold text-white" htmlFor="passengers">
                       <UserGroupIcon className="w-5 h-5 mr-2 text-yellow-600" /> Passengers
                     </label>
                     <select
@@ -221,9 +218,7 @@ export default function FlightSearchForm({ onSearch }: Props) {
                 )}
               />
             </div>
-
           </div>
-
           {/* Submit Button */}
           <div className="w-full md:w-1/4 mx-auto my-5 ">
             <button

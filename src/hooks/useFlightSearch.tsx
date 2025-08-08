@@ -31,7 +31,7 @@ export const useFlightSearch = () => {
         destinationLocationCode: extractIATACode(params.to),
         departureDate: params.date,
         adults: params.passengers,
-        max: 10,
+
       });
       setFlights(flightData.data || []);
     } catch (e: any) {
