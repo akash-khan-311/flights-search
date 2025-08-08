@@ -7,9 +7,9 @@ export default function FlightTable({ flights }: FlightTableProps) {
   console.log(flights);
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto ">
       <h1 className="text-5xl md:text-6xl lg:text-7xl flex justify-center items-center bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 text-transparent bg-clip-text font-medium my-8 text-center">✈ Pick the Best Flight for You</h1>
-      <table className="min-w-full border-gray-200 rounded-lg shadow-sm backdrop-blur-2xl bg-black/10">
+      <table className="min-w-full rounded-xl border-gray-200 shadow-sm backdrop-blur-2xl bg-black/10 ">
         <thead className="backdrop-blur-3xl bg-white/60">
           <tr>
             <th className="text-left px-4 py-2 border-b">Airline</th>

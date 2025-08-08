@@ -16,7 +16,7 @@ export default function FlightPage() {
   console.log({ loading, error, flights });
 
   return (
-    <section className="container mx-auto py-8">
+    <section className="container mx-auto py-8 px-3 md:px-0">
       <div className="">
         <FlightSearchForm onSearch={handleSearch} />
         {loading && <Loading />}
